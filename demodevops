@@ -1,0 +1,195 @@
+from selenium import webdriver
+options = webdriver.ChromeOptions() 
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.action_chains import ActionChains
+import time
+
+
+
+
+
+driver = webdriver.Chrome(executable_path=r"C:\Users\Administrator\Desktop\Freight RPA flows\chromedriver.exe")
+driver.maximize_window();
+driver.implicitly_wait(30)
+#time.sleep(3)
+driver.get("https://continental-carriers.mylogisys.com/NewHomePage.aspx")
+
+
+wait = WebDriverWait(driver, 10)
+
+
+User_Name = driver.find_element(By.ID, "txtUserId").send_keys('love')
+Password = driver.find_element(By.ID, "txtPassword").send_keys('Love@123')
+
+
+login = driver.find_element(By.ID, "btnLogin")
+login.click()
+
+time.sleep(2)
+
+original_window = driver.current_window_handle
+
+submit = driver.find_element(By.XPATH, "/html/body/form/div[2]/div/div/div[2]/div/div[3]/form/div[4]/div/div/div/div/button")
+submit.click()
+
+WebDriverWait(driver, 30).until(EC.alert_is_present())
+driver.switch_to.alert.accept()
+wait.until(EC.number_of_windows_to_be(2))
+
+for window_handle in driver.window_handles:
+    print(window_handle)
+
+driver.switch_to.window(driver.window_handles[1])
+# Loop through until we find a new window handle
+for window_handle in driver.window_handles:
+    if window_handle != original_window:
+        print('switching to another window')
+        driver.switch_to.window(window_handle)
+    break
+
+
+
+organization = driver.find_element(By.XPATH, "/html/body/form/div[2]/div[7]/header/nav/ul/li[1]/img").click()
+
+iframe = driver.find_element(By.ID, "DocFrame")
+driver.switch_to.frame(iframe)
+time.sleep(2)
+
+
+Name = driver.find_element(By.XPATH, "/html/body/form/div[4]/table/tbody/tr/td/table/tbody/tr[3]/td/div/div/table/tbody/tr[1]/td[2]/input").send_keys('aerodry4 united states')
+Alias = driver.find_element(By.XPATH, "/html/body/form/div[4]/table/tbody/tr/td/table/tbody/tr[3]/td/div/div/table/tbody/tr[1]/td[4]/input").send_keys('Aero4 USA')
+Type = driver.find_element(By.XPATH, "//input[@id='chkorgagent']").click()
+Country = driver.find_element(By.XPATH, "/html/body/form/div[4]/table/tbody/tr/td/table/tbody/tr[3]/td/div/div/table/tbody/tr[2]/td[4]/table/tbody/tr/td[1]/div[1]/input").send_keys('India')
+time.sleep(1)
+
+Search = driver.find_element(By.XPATH, "//input[@id = 'ButSearch']").click()
+time.sleep(2)
+
+rows = driver.find_elements(By.CLASS_NAME, "SGridItem")
+
+iscustomerpresent = False
+
+
+for row in rows:
+    # Get the column        
+    col = row.find_elements(By.XPATH, 'td')[0]
+    print(col.text)
+    if Name.__eq__(col.text):
+        print("organization exits")
+        iscustomerpresent = True
+        driver.switch_to.default_content()
+        time.sleep(2)
+        driver.find_element(By.XPATH, "/html/body/form/div[2]/div[7]/header/nav/ul/li[1]/img").click()
+        exit()
+        
+    else:
+        pass
+        
+        
+NewOrganization = driver.find_element(By.XPATH, "/html/body/form/div[4]/table/tbody/tr/td/table/tbody/tr[1]/td[1]/div[1]/a[1]/img").click()
+
+driver.switch_to.window(driver.window_handles[2])
+
+Company_Name = driver.find_element(By.NAME, "txtorgName").send_keys('aerodry4 united states')
+
+Alias = driver.find_element(By.NAME, "txtorgCode").send_keys('Aero4 USA')
+
+Customer_Type = driver.find_element(By.ID, "chkorgagent").click()
+time.sleep(5)
+
+New_Branch = driver.find_element(By.NAME, "btnNewBranch").click()
+time.sleep(3)
+
+#GENERAL DEATILS
+
+Branch_Name = driver.find_element(By.NAME, "txtAddBranchName").send_keys('Noida')
+time.sleep(1)
+
+Address = driver.find_element(By.NAME, "txtBranchAdd1").send_keys('plot no.199, sec 63, noida')
+time.sleep(1)
+
+Country = driver.find_element(By.NAME, "CountryPopup$txtName").send_keys('India')
+time.sleep(1)
+
+driver.find_element(By.NAME, "CountryPopup$txtName").click()
+time.sleep(1)
+
+time.sleep(1)
+driver.find_element(By.NAME, "popupState$txtName").click()
+time.sleep(1)
+
+State = driver.find_element(By.NAME, "popupState$txtName").send_keys('Uttar Pradesh')
+time.sleep(1)
+driver.find_element(By.NAME, "popupState$txtName").click()
+time.sleep(1)
+
+City = driver.find_element(By.NAME, "popupBranchCity$txtName").send_keys('Noida')
+time.sleep(1)
+driver.find_element(By.NAME, "popupBranchCity$txtName").click()
+time.sleep(1)
+
+driver.find_element(By.NAME, "txtAddTelephone").click()
+time.sleep(1)
+Telephone = driver.find_element(By.NAME, "txtAddTelephone").send_keys('8448775390')
+time.sleep(1)
+driver.find_element(By.NAME, "txtAddTelephone").click()
+time.sleep(1)
+
+Website = driver.find_element(By.NAME, "txtWebSite").send_keys('AutomationFactory.com')
+#time.sleep(3)
+
+Sales_Person = driver.find_element(By.NAME, "ddlOrgBrnchSalesPerson").send_keys('Administrator')
+#time.sleep(3)
+
+Taxable_Type = driver.find_element(By.NAME, "ddlTaxableType").send_keys('Standard')
+#time.sleep(3)
+
+Postal_Code = driver.find_element(By.NAME, "txtAddPostalCode").send_keys('201301')
+#time.sleep(3)
+
+Fax = driver.find_element(By.NAME, "txtAddFax").send_keys('101')
+#time.sleep(3)
+
+Email = driver.find_element(By.NAME, "txtAddEmailId").send_keys('tyagiharshit976@gmail.com')
+#time.sleep(3)
+
+Collection_Exec = driver.find_element(By.NAME, "ddlOrgBrnchCollectionExec").send_keys('IT TEAM')
+#time.sleep(3)
+
+Update = driver.find_element(By.NAME, "btnAddSubmitBranch").click()
+time.sleep(3)
+
+WebDriverWait(driver, 20).until(EC.alert_is_present())
+driver.switch_to.alert.accept()
+time.sleep(3)
+
+Save2 = driver.find_element(By.XPATH, "/html/body/form/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div[1]/a[1]/img").click()
+time.sleep(4)
+
+#ACCOUNT DETALS
+Accounts = driver.find_element(By.ID, "tsMainLink6").click()
+time.sleep(2)
+
+Credit_Limit = driver.find_element(By.ID, "txtRecCreditLimit").send_keys('500000')
+time.sleep(2)
+
+Customer_G_L = driver.find_element(By.NAME, "ctl59$txtName").send_keys('AR-OR-WCA')
+
+Notification_Email = driver.find_element(By.NAME, "txtAccContacts").send_keys('example12@gmail.com')
+
+Organization_Type = driver.find_element(By.NAME, "ddlOrgType").send_keys('Company')
+
+Receivable_Credit_Period = driver.find_element(By.ID, "neRcvblCreditDays").send_keys('15')
+
+Payable_Credit_Period = driver.find_element(By.ID, "nePayblCreditDays").send_keys('15')
+
+Save_accounts = driver.find_element(By.XPATH, "/html/body/form/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div[1]/a[1]/img").click()
+time.sleep(4)
+
+Save_and_Close = driver.find_element(By.XPATH, "/html/body/form/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div[1]/a[2]/img").click()
+time.sleep(2)
